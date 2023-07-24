@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "allowJs": true,
+        "outDir": "build"
+    },
+    "files": [
+        "build/littlejs.esm.js"
+    ]
+}

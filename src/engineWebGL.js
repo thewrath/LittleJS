@@ -11,20 +11,41 @@
 
 'use strict';
 
+import {
+    cavasPixelated, cameraPos,
+    cameraScale,
+    glEnable,
+    glOverlay
+} from './engineSettings.js';
+
+import {
+    ASSERT
+} from './engineDebug.js';
+import {
+    tileImage,
+    mainCanvas,
+    mainContext,
+    overlayCanvas
+} from './engineDraw.js';
+
+import {
+    time
+} from './engine.js';
+
 /** The WebGL canvas which appears above the main canvas and below the overlay canvas
  *  @type {HTMLCanvasElement}
  *  @memberof WebGL */
-let glCanvas;
+export let glCanvas;
 
 /** 2d context for glCanvas 
  *  @type {WebGLRenderingContext}
  *  @memberof WebGL */
-let glContext;
+export let glContext;
 
 /** Main tile sheet texture automatically loaded by engine
  *  @type {WebGLTexture}
  *  @memberof WebGL */
-let glTileTexture;
+export let glTileTexture;
 
 // WebGL internal variables not exposed to documentation
 let glActiveTexture, glShader, glArrayBuffer, glPositionData, glColorData, glBatchCount, glBatchAdditive, glAdditive;
@@ -73,7 +94,7 @@ function glInit()
 /** Set the WebGl blend mode, normally you should call setBlendMode instead
  *  @param {Boolean} [additive=0]
  *  @memberof WebGL */
-function glSetBlendMode(additive)
+export function glSetBlendMode(additive)
 {
     // setup blending
     glAdditive = additive;
@@ -83,7 +104,7 @@ function glSetBlendMode(additive)
  *  <br> - This may also flush the gl buffer resulting in more draw calls and worse performance
  *  @param {WebGLTexture} [texture=glTileTexture]
  *  @memberof WebGL */
-function glSetTexture(texture=glTileTexture)
+export function glSetTexture(texture=glTileTexture)
 {
     // must flush cache with the old texture to set a new one
     if (texture != glActiveTexture)
@@ -97,7 +118,7 @@ function glSetTexture(texture=glTileTexture)
  *  @param          type
  *  @return {WebGLShader}
  *  @memberof WebGL */
-function glCompileShader(source, type)
+export function glCompileShader(source, type)
 {
     // build the shader
     const shader = glContext.createShader(type);
@@ -115,7 +136,7 @@ function glCompileShader(source, type)
  *  @param {WebGLShader} fsSource
  *  @return {WebGLProgram}
  *  @memberof WebGL */
-function glCreateProgram(vsSource, fsSource)
+export function glCreateProgram(vsSource, fsSource)
 {
     // build the program
     const program = glContext.createProgram();
@@ -133,7 +154,7 @@ function glCreateProgram(vsSource, fsSource)
  *  @param {Image} image
  *  @return {WebGLTexture}
  *  @memberof WebGL */
-function glCreateTexture(image)
+export function glCreateTexture(image)
 {
     // build the texture
     const texture = glContext.createTexture();
@@ -269,7 +290,7 @@ let glPostShader, glPostArrayBuffer, glPostTexture, glPostIncludeOverlay;
  *  @param {String} shaderCode
  *  @param {Boolean} includeOverlay
  *  @memberof WebGL */
-function glInitPostProcess(shaderCode, includeOverlay)
+export function glInitPostProcess(shaderCode, includeOverlay)
 {
     ASSERT(!glPostShader); // can only have 1 post effects shader
 

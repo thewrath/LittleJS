@@ -10,6 +10,26 @@
 
 'use strict';
 
+import {
+    cameraPos, soundEnable,
+    soundVolume,
+    soundDefaultRange,
+    soundDefaultTaper
+} from './engineSettings.js';
+
+import {
+    PI,
+    abs,
+    min,
+    max,
+    sign, clamp,
+    percent, Vector2, rand
+} from './engineUtilities.js';
+
+import {
+    mainCanvas, worldToScreen
+} from './engineDraw.js';
+
 /** 
  * Sound Object - Stores a zzfx sound for later use and can be played positionally
  * <br>
@@ -21,7 +41,7 @@
  * // play the sound
  * sound_example.play();
  */
-class Sound
+export class Sound
 {
     /** Create a sound object and cache the zzfx samples for later use
      *  @param {Array}  zzfxSound - Array of zzfx parameters, ex. [.5,.5]
@@ -125,7 +145,7 @@ class Sound
  * // play the music
  * music_example.play();
  */
-class Music
+export class Music
 {
     /** Create a music object and cache the zzfx music samples for later use
      *  @param {Array} zzfxMusic - Array of zzfx music parameters
@@ -169,7 +189,7 @@ class Music
  *  @param {Boolean} [loop=1] - True if the music should loop when it reaches the end
  *  @return {HTMLAudioElement} - The audio element for this sound
  *  @memberof Audio */
-function playAudioFile(url, volume=1, loop=1)
+export function playAudioFile(url, volume=1, loop=1)
 {
     if (!soundEnable) return;
 
@@ -188,7 +208,7 @@ function playAudioFile(url, volume=1, loop=1)
  *  @param {Number} [pitch=1] - How much to change the pitch by
  *  @return {SpeechSynthesisUtterance} - The utterance that was spoken
  *  @memberof Audio */
-function speak(text, language='', volume=1, rate=1, pitch=1)
+export function speak(text, language='', volume=1, rate=1, pitch=1)
 {
     if (!soundEnable || !speechSynthesis) return;
 
@@ -208,20 +228,20 @@ function speak(text, language='', volume=1, rate=1, pitch=1)
 
 /** Stop all queued speech
  *  @memberof Audio */
-const speakStop = ()=> speechSynthesis && speechSynthesis.cancel();
+export const speakStop = ()=> speechSynthesis && speechSynthesis.cancel();
 
 /** Get frequency of a note on a musical scale
  *  @param {Number} semitoneOffset - How many semitones away from the root note
  *  @param {Number} [rootNoteFrequency=220] - Frequency at semitone offset 0
  *  @return {Number} - The frequency of the note
  *  @memberof Audio */
-const getNoteFrequency = (semitoneOffset, rootFrequency=220)=> rootFrequency * 2**(semitoneOffset/12); 
+export const getNoteFrequency = (semitoneOffset, rootFrequency=220)=> rootFrequency * 2**(semitoneOffset/12); 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /** Audio context used by the engine
  *  @memberof Audio */
-let audioContext;
+export let audioContext;
 
 /** Play cached audio samples with given settings
  *  @param {Array}   sampleChannels - Array of arrays of samples to play (for stereo playback)
@@ -231,7 +251,7 @@ let audioContext;
  *  @param {Boolean} [loop=0] - True if the sound should loop when it reaches the end
  *  @return {AudioBufferSourceNode} - The audio node of the sound played
  *  @memberof Audio */
-function playSamples(sampleChannels, volume=1, rate=1, pan=0, loop=0) 
+export function playSamples(sampleChannels, volume=1, rate=1, pan=0, loop=0) 
 {
     if (!soundEnable) return;
 
@@ -278,7 +298,7 @@ function playSamples(sampleChannels, volume=1, rate=1, pan=0, loop=0)
  *  @param {Array} zzfxSound - Array of ZzFX parameters, ex. [.5,.5]
  *  @return {Array} - Array of audio samples
  *  @memberof Audio */
-const zzfx = (...zzfxSound) => playSamples([zzfxG(...zzfxSound)]);
+export const zzfx = (...zzfxSound) => playSamples([zzfxG(...zzfxSound)]);
 
 /** Sample rate used for all ZzFX sounds
  *  @default 44100

@@ -7,6 +7,36 @@
 
 'use strict';
 
+import {
+    tileSizeDefault, particleEmitRateScale
+} from './engineSettings.js';
+
+import {
+    debugRect
+} from './engineDebug.js';
+
+import {
+    PI, min,
+    max, Vector2,
+    vec2,
+    rand,
+    randInt,
+    randSign,
+    randInCircle, randColor, Color
+} from './engineUtilities.js';
+
+import {
+    EngineObject
+} from './engineObject.js';
+
+import {
+    drawTile, setBlendMode
+} from './engineDraw.js';
+
+import {
+    timeDelta, time
+} from './engine.js';
+
 /**
  * Particle Emitter - Spawns particles with the given settings
  * @extends EngineObject
@@ -24,7 +54,7 @@
  *     .5, 1                // randomness, collide, additive, randomColorLinear, renderOrder
  * );
  */
-class ParticleEmitter extends EngineObject
+export class ParticleEmitter extends EngineObject
 {
     /** Create a particle system with the given settings
      *  @param {Vector2} position           - World space position of the emitter
@@ -242,7 +272,7 @@ class ParticleEmitter extends EngineObject
  * Particle Object - Created automatically by Particle Emitters
  * @extends EngineObject
  */
-class Particle extends EngineObject
+export class Particle extends EngineObject
 {
     /**
      * Create a particle with the given settings

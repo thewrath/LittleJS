@@ -9,104 +9,136 @@
 
 'use strict';
 
+import {
+    gamepadsEnable,
+    gamepadDirectionEmulateStick,
+    inputWASDEmulateDirection,
+    touchGamepadEnable,
+    touchGamepadAnalog,
+    touchGamepadSize,
+    touchGamepadAlpha,
+    vibrateEnable
+} from './engineSettings.js';
+
+
+import {
+    PI, sign, percent, Vector2,
+    vec2, Timer
+} from './engineUtilities.js';
+
+
+import {
+    mainCanvas, overlayContext,
+    mainCanvasSize,
+    screenToWorld
+} from './engineDraw.js';
+
+import {
+    zzfx
+} from './engineAudio.js';
+
+import {
+    paused
+} from './engine.js';
+
 /** Returns true if device key is down
  *  @param {Number} key
  *  @param {Number} [device=0]
  *  @return {Boolean}
  *  @memberof Input */
-const keyIsDown = (key, device=0)=> inputData[device] && inputData[device][key] & 1;
+export const keyIsDown = (key, device=0)=> inputData[device] && inputData[device][key] & 1;
 
 /** Returns true if device key was pressed this frame
  *  @param {Number} key
  *  @param {Number} [device=0]
  *  @return {Boolean}
  *  @memberof Input */
-const keyWasPressed = (key, device=0)=> inputData[device] && inputData[device][key] & 2 ? 1 : 0;
+export const keyWasPressed = (key, device=0)=> inputData[device] && inputData[device][key] & 2 ? 1 : 0;
 
 /** Returns true if device key was released this frame
  *  @param {Number} key
  *  @param {Number} [device=0]
  *  @return {Boolean}
  *  @memberof Input */
-const keyWasReleased = (key, device=0)=> inputData[device] && inputData[device][key] & 4 ? 1 : 0;
+export const keyWasReleased = (key, device=0)=> inputData[device] && inputData[device][key] & 4 ? 1 : 0;
 
 /** Clears all input
  *  @memberof Input */
-const clearInput = ()=> inputData = [[]];
+export const clearInput = ()=> inputData = [[]];
 
 /** Returns true if mouse button is down
  *  @function
  *  @param {Number} button
  *  @return {Boolean}
  *  @memberof Input */
-const mouseIsDown = keyIsDown;
+export const mouseIsDown = keyIsDown;
 
 /** Returns true if mouse button was pressed
  *  @function
  *  @param {Number} button
  *  @return {Boolean}
  *  @memberof Input */
-const mouseWasPressed = keyWasPressed;
+export const mouseWasPressed = keyWasPressed;
 
 /** Returns true if mouse button was released
  *  @function
  *  @param {Number} button
  *  @return {Boolean}
  *  @memberof Input */
-const mouseWasReleased = keyWasReleased;
+export const mouseWasReleased = keyWasReleased;
 
 /** Mouse pos in world space
  *  @type {Vector2}
  *  @memberof Input */
-let mousePos = vec2();
+export let mousePos = vec2();
 
 /** Mouse pos in screen space
  *  @type {Vector2}
  *  @memberof Input */
-let mousePosScreen = vec2();
+export let mousePosScreen = vec2();
 
 /** Mouse wheel delta this frame
  *  @type {Number}
  *  @memberof Input */
-let mouseWheel = 0;
+export let mouseWheel = 0;
 
 /** Returns true if user is using gamepad (has more recently pressed a gamepad button)
  *  @type {Boolean}
  *  @memberof Input */
-let isUsingGamepad = 0;
+export let isUsingGamepad = 0;
 
 /** Prevents input continuing to the default browser handling (false by default)
  *  @type {Boolean}
  *  @memberof Input */
-let preventDefaultInput = 0;
+export let preventDefaultInput = 0;
 
 /** Returns true if gamepad button is down
  *  @param {Number} button
  *  @param {Number} [gamepad=0]
  *  @return {Boolean}
  *  @memberof Input */
-const gamepadIsDown = (button, gamepad=0)=> keyIsDown(button, gamepad+1);
+export const gamepadIsDown = (button, gamepad=0)=> keyIsDown(button, gamepad+1);
 
 /** Returns true if gamepad button was pressed
  *  @param {Number} button
  *  @param {Number} [gamepad=0]
  *  @return {Boolean}
  *  @memberof Input */
-const gamepadWasPressed = (button, gamepad=0)=> keyWasPressed(button, gamepad+1);
+export const gamepadWasPressed = (button, gamepad=0)=> keyWasPressed(button, gamepad+1);
 
 /** Returns true if gamepad button was released
  *  @param {Number} button
  *  @param {Number} [gamepad=0]
  *  @return {Boolean}
  *  @memberof Input */
-const gamepadWasReleased = (button, gamepad=0)=> keyWasReleased(button, gamepad+1);
+export const gamepadWasReleased = (button, gamepad=0)=> keyWasReleased(button, gamepad+1);
 
 /** Returns gamepad stick value
  *  @param {Number} stick
  *  @param {Number} [gamepad=0]
  *  @return {Vector2}
  *  @memberof Input */
-const gamepadStick = (stick,  gamepad=0)=> stickData[gamepad] ? stickData[gamepad][stick] || vec2() : vec2();
+export const gamepadStick = (stick,  gamepad=0)=> stickData[gamepad] ? stickData[gamepad][stick] || vec2() : vec2();
 
 ///////////////////////////////////////////////////////////////////////////////
 // Input update called by engine
@@ -162,7 +194,7 @@ onwheel = (e)=> e.ctrlKey || (mouseWheel = sign(e.deltaY));
 oncontextmenu = (e)=> !1; // prevent right click menu
 
 // convert a mouse or touch event position to screen space
-const mouseToScreen = (mousePos)=>
+export const mouseToScreen = (mousePos)=>
 {
     if (!mainCanvas)
         return vec2(); // fix bug that can occur if user clicks before page loads
@@ -176,7 +208,7 @@ const mouseToScreen = (mousePos)=>
 // Gamepad input
 
 const stickData = [];
-function gamepadsUpdate()
+export function gamepadsUpdate()
 {
     if (touchGamepadEnable && touchGamepadTimer.isSet())
     {
@@ -242,18 +274,18 @@ function gamepadsUpdate()
 /** Pulse the vibration hardware if it exists
  *  @param {Number} [pattern=100] - a single value in miliseconds or vibration interval array
  *  @memberof Input */
-const vibrate = (pattern)=> vibrateEnable && navigator && navigator.vibrate && navigator.vibrate(pattern);
+export const vibrate = (pattern)=> vibrateEnable && navigator && navigator.vibrate && navigator.vibrate(pattern);
 
 /** Cancel any ongoing vibration
  *  @memberof Input */
-const vibrateStop = ()=> vibrate(0);
+export const vibrateStop = ()=> vibrate(0);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Touch input
 
 /** True if a touch device has been detected
  *  @memberof Input */
-const isTouchDevice = window.ontouchstart !== undefined;
+export const isTouchDevice = window.ontouchstart !== undefined;
 
 // try to enable touch mouse
 if (isTouchDevice)

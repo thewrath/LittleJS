@@ -22,35 +22,57 @@
 
 'use strict';
 
+import {
+    cavasPixelated,
+    fontDefault,
+    tileSizeDefault,
+    tileFixBleedScale, cameraPos,
+    cameraScale,
+    glEnable
+} from './engineSettings.js';
+
+import {
+    ASSERT
+} from './engineDebug.js';
+
+import {
+    Vector2,
+    vec2, Color
+} from './engineUtilities.js';
+
+import {
+    glSetBlendMode
+} from './engineWebGL.js';
+
 /** The primary 2D canvas visible to the user
  *  @type {HTMLCanvasElement}
  *  @memberof Draw */
-let mainCanvas;
+export let mainCanvas;
 
 /** 2d context for mainCanvas
  *  @type {CanvasRenderingContext2D}
  *  @memberof Draw */
-let mainContext;
+export let mainContext;
 
 /** A canvas that appears on top of everything the same size as mainCanvas
  *  @type {HTMLCanvasElement}
  *  @memberof Draw */
-let overlayCanvas;
+export let overlayCanvas;
 
 /** 2d context for overlayCanvas
  *  @type {CanvasRenderingContext2D}
  *  @memberof Draw */
-let overlayContext;
+export let overlayContext;
 
 /** The size of the main canvas (and other secondary canvases) 
  *  @type {Vector2}
  *  @memberof Draw */
-let mainCanvasSize = vec2();
+export let mainCanvasSize = vec2();
 
 /** Tile sheet for batch rendering system
  *  @type {CanvasImageSource}
  *  @memberof Draw */
-const tileImage = new Image;
+export const tileImage = new Image;
 
 // Engine internal variables not exposed to documentation
 let tileImageSize, tileImageFixBleed, drawCount;
@@ -60,7 +82,7 @@ let tileImageSize, tileImageFixBleed, drawCount;
  *  @param {Vector2} screenPos
  *  @return {Vector2}
  *  @memberof Draw */
-const screenToWorld = (screenPos)=>
+export const screenToWorld = (screenPos)=>
 {
     ASSERT(mainCanvasSize.x && mainCanvasSize.y, 'mainCanvasSize is invalid');
     return screenPos.add(vec2(.5)).subtract(mainCanvasSize.scale(.5)).multiply(vec2(1/cameraScale,-1/cameraScale)).add(cameraPos);
@@ -71,7 +93,7 @@ const screenToWorld = (screenPos)=>
  *  @param {Vector2} worldPos
  *  @return {Vector2}
  *  @memberof Draw */
-const worldToScreen = (worldPos)=>
+export const worldToScreen = (worldPos)=>
 {
     ASSERT(mainCanvasSize.x && mainCanvasSize.y, 'mainCanvasSize is invalid');
     return worldPos.subtract(cameraPos).multiply(vec2(cameraScale,-cameraScale)).add(mainCanvasSize.scale(.5)).subtract(vec2(.5));
@@ -88,7 +110,7 @@ const worldToScreen = (worldPos)=>
  *  @param {Color}   [additiveColor=Color(0,0,0,0)] - Additive color to be applied
  *  @param {Boolean} [useWebGL=glEnable]            - Use accelerated WebGL rendering
  *  @memberof Draw */
-function drawTile(pos, size=vec2(1), tileIndex=-1, tileSize=tileSizeDefault, color=new Color, angle=0, mirror, 
+export function drawTile(pos, size=vec2(1), tileIndex=-1, tileSize=tileSizeDefault, color=new Color, angle=0, mirror, 
     additiveColor=new Color(0,0,0,0), useWebGL=glEnable)
 {
     showWatermark && ++drawCount;
@@ -146,7 +168,7 @@ function drawTile(pos, size=vec2(1), tileIndex=-1, tileSize=tileSizeDefault, col
  *  @param {Number}  [angle=0]
  *  @param {Boolean} [useWebGL=glEnable]
  *  @memberof Draw */
-function drawRect(pos, size, color, angle, useWebGL)
+export function drawRect(pos, size, color, angle, useWebGL)
 {
     drawTile(pos, size, -1, tileSizeDefault, color, angle, 0, 0, useWebGL);
 }
@@ -162,7 +184,7 @@ function drawRect(pos, size, color, angle, useWebGL)
  *  @param {Color}   [additiveColor=Color(0,0,0,0)]
  *  @param {Boolean} [useWebGL=glEnable]
  *  @memberof Draw */
-function drawTileScreenSpace(pos, size=vec2(1), tileIndex, tileSize, color, angle, mirror, additiveColor, useWebGL)
+export function drawTileScreenSpace(pos, size=vec2(1), tileIndex, tileSize, color, angle, mirror, additiveColor, useWebGL)
 {
     drawTile(screenToWorld(pos), size.scale(1/cameraScale), tileIndex, tileSize, color, angle, mirror, additiveColor, useWebGL);
 }
@@ -174,7 +196,7 @@ function drawTileScreenSpace(pos, size=vec2(1), tileIndex, tileSize, color, angl
  *  @param {Number}  [angle=0]
  *  @param {Boolean} [useWebGL=glEnable]
  *  @memberof Draw */
-function drawRectScreenSpace(pos, size, color, angle, useWebGL)
+export function drawRectScreenSpace(pos, size, color, angle, useWebGL)
 {
     drawTileScreenSpace(pos, size, -1, tileSizeDefault, color, angle, 0, 0, useWebGL);
 }
@@ -186,7 +208,7 @@ function drawRectScreenSpace(pos, size, color, angle, useWebGL)
  *  @param {Color}   [color=Color()]
  *  @param {Boolean} [useWebGL=glEnable]
  *  @memberof Draw */
-function drawLine(posA, posB, thickness=.1, color, useWebGL)
+export function drawLine(posA, posB, thickness=.1, color, useWebGL)
 {
     const halfDelta = vec2((posB.x - posA.x)/2, (posB.y - posA.y)/2);
     const size = vec2(thickness, halfDelta.length()*2);
@@ -201,7 +223,7 @@ function drawLine(posA, posB, thickness=.1, color, useWebGL)
  *  @param {Function} drawFunction
  *  @param {CanvasRenderingContext2D} [context=mainContext]
  *  @memberof Draw */
-function drawCanvas2D(pos, size, angle, mirror, drawFunction, context = mainContext)
+export function drawCanvas2D(pos, size, angle, mirror, drawFunction, context = mainContext)
 {
     // create canvas transform from world space to screen space
     pos = worldToScreen(pos);
@@ -218,7 +240,7 @@ function drawCanvas2D(pos, size, angle, mirror, drawFunction, context = mainCont
  *  @param {Boolean} [additive=0]
  *  @param {Boolean} [useWebGL=glEnable]
  *  @memberof Draw */
-function setBlendMode(additive, useWebGL=glEnable)
+export function setBlendMode(additive, useWebGL=glEnable)
 {
     if (glEnable && useWebGL)
         glSetBlendMode(additive);
@@ -238,7 +260,7 @@ function setBlendMode(additive, useWebGL=glEnable)
  *  @param {String}  [font=fontDefault]
  *  @param {CanvasRenderingContext2D} [context=overlayContext]
  *  @memberof Draw */
-function drawText(text, pos, size=1, color, lineWidth=0, lineColor, textAlign, font, context)
+export function drawText(text, pos, size=1, color, lineWidth=0, lineColor, textAlign, font, context)
 {
     drawTextScreen(text, worldToScreen(pos), size*cameraScale, color, lineWidth*cameraScale, lineColor, textAlign, font, context);
 }
@@ -255,7 +277,7 @@ function drawText(text, pos, size=1, color, lineWidth=0, lineColor, textAlign, f
  *  @param {String}  [font=fontDefault]
  *  @param {CanvasRenderingContext2D} [context=overlayContext]
  *  @memberof Draw */
-function drawTextScreen(text, pos, size=1, color=new Color, lineWidth=0, lineColor=new Color(0,0,0), textAlign='center', font=fontDefault, context=overlayContext)
+export function drawTextScreen(text, pos, size=1, color=new Color, lineWidth=0, lineColor=new Color(0,0,0), textAlign='center', font=fontDefault, context=overlayContext)
 {
     context.fillStyle = color;
     context.lineWidth = lineWidth;
@@ -276,7 +298,7 @@ function drawTextScreen(text, pos, size=1, color=new Color, lineWidth=0, lineCol
 
 ///////////////////////////////////////////////////////////////////////////////
 
-let engineFontImage;
+export let engineFontImage;
 
 /** 
  * Font Image Object - Draw text on a 2D canvas by using characters in an image
@@ -290,7 +312,7 @@ let engineFontImage;
  * // draw text
  * font.drawTextScreen("LittleJS\nHello World!", vec2(200, 50));
  */
-class FontImage
+export class FontImage
 {
     /** Create an image font
      *  @param {HTMLImageElement} [image] - Image for the font, if undefined default font is used
@@ -368,11 +390,11 @@ class FontImage
 /** Returns true if fullscreen mode is active
  *  @return {Boolean}
  *  @memberof Draw */
-const isFullscreen = ()=> document.fullscreenElement;
+export const isFullscreen = ()=> document.fullscreenElement;
 
 /** Toggle fullsceen mode
  *  @memberof Draw */
-function toggleFullscreen()
+export function toggleFullscreen()
 {
     if (isFullscreen())
     {

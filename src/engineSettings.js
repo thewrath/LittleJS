@@ -5,6 +5,11 @@
 
 'use strict';
 
+import {
+    Vector2,
+    vec2
+} from './engineUtilities.js';
+
 ///////////////////////////////////////////////////////////////////////////////
 // Camera settings
 
@@ -12,13 +17,13 @@
  *  @type {Vector2}
  *  @default Vector2()
  *  @memberof Settings */
-let cameraPos = vec2();
+export let cameraPos = vec2();
 
 /** Scale of camera in world space
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let cameraScale = 32;
+export let cameraScale = 32;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Display settings
@@ -27,26 +32,26 @@ let cameraScale = 32;
  *  @type {Vector2}
  *  @default Vector2(1920,1200)
  *  @memberof Settings */
-let canvasMaxSize = vec2(1920, 1200);
+export let canvasMaxSize = vec2(1920, 1200);
 
 /** Fixed size of the canvas, if enabled canvas size never changes
  * - you may also need to set mainCanvasSize if using screen space coords in startup
  *  @type {Vector2}
  *  @default Vector2()
  *  @memberof Settings */
-let canvasFixedSize = vec2();
+export let canvasFixedSize = vec2();
 
 /** Disables anti aliasing for pixel art if true
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let cavasPixelated = 1;
+export let cavasPixelated = 1;
 
 /** Default font used for text rendering
  *  @type {String}
  *  @default
  *  @memberof Settings */
-let fontDefault = 'arial';
+export let fontDefault = 'arial';
 
 ///////////////////////////////////////////////////////////////////////////////
 // WebGL settings
@@ -55,13 +60,13 @@ let fontDefault = 'arial';
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let glEnable = 1;
+export let glEnable = 1;
 
 /** Fixes slow rendering in some browsers by not compositing the WebGL canvas
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let glOverlay = 1;
+export let glOverlay = 1;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Tile sheet settings
@@ -70,13 +75,13 @@ let glOverlay = 1;
  *  @type {Vector2}
  *  @default Vector2(16,16)
  *  @memberof Settings */
-let tileSizeDefault = vec2(16);
+export let tileSizeDefault = vec2(16);
 
 /** Prevent tile bleeding from neighbors in pixels
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let tileFixBleedScale = .3;
+export let tileFixBleedScale = .3;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Object settings
@@ -85,55 +90,55 @@ let tileFixBleedScale = .3;
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let enablePhysicsSolver = 1;
+export let enablePhysicsSolver = 1;
 
 /** Default object mass for collison calcuations (how heavy objects are)
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let objectDefaultMass = 1;
+export let objectDefaultMass = 1;
 
 /** How much to slow velocity by each frame (0-1)
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let objectDefaultDamping = 1;
+export let objectDefaultDamping = 1;
 
 /** How much to slow angular velocity each frame (0-1)
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let objectDefaultAngleDamping = 1;
+export let objectDefaultAngleDamping = 1;
 
 /** How much to bounce when a collision occurs (0-1)
  *  @type {Number}
  *  @default 0
  *  @memberof Settings */
-let objectDefaultElasticity = 0;
+export let objectDefaultElasticity = 0;
 
 /** How much to slow when touching (0-1)
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let objectDefaultFriction = .8;
+export let objectDefaultFriction = .8;
 
 /** Clamp max speed to avoid fast objects missing collisions
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let objectMaxSpeed = 1;
+export let objectMaxSpeed = 1;
 
 /** How much gravity to apply to objects along the Y axis, negative is down
  *  @type {Number}
  *  @default 0
  *  @memberof Settings */
-let gravity = 0;
+export let gravity = 0;
 
 /** Scales emit rate of particles, useful for low graphics mode (0 disables particle emitters)
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let particleEmitRateScale = 1;
+export let particleEmitRateScale = 1;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Input settings
@@ -142,19 +147,19 @@ let particleEmitRateScale = 1;
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let gamepadsEnable = 1;
+export let gamepadsEnable = 1;
 
 /** If true, the dpad input is also routed to the left analog stick (for better accessability)
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let gamepadDirectionEmulateStick = 1;
+export let gamepadDirectionEmulateStick = 1;
 
 /** If true the WASD keys are also routed to the direction keys (for better accessability)
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let inputWASDEmulateDirection = 1;
+export let inputWASDEmulateDirection = 1;
 
 /** True if touch gamepad should appear on mobile devices
  *  <br> - Supports left analog stick, 4 face buttons and start button (button 9)
@@ -162,31 +167,31 @@ let inputWASDEmulateDirection = 1;
  *  @type {Boolean}
  *  @default 0
  *  @memberof Settings */
-let touchGamepadEnable = 0;
+export let touchGamepadEnable = 0;
 
 /** True if touch gamepad should be analog stick or false to use if 8 way dpad
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let touchGamepadAnalog = 1;
+export let touchGamepadAnalog = 1;
 
 /** Size of virutal gamepad for touch devices in pixels
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let touchGamepadSize = 99;
+export let touchGamepadSize = 99;
 
 /** Transparency of touch gamepad overlay
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let touchGamepadAlpha = .3;
+export let touchGamepadAlpha = .3;
 
 /** Allow vibration hardware if it exists
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let vibrateEnable = 1;
+export let vibrateEnable = 1;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Audio settings
@@ -195,25 +200,25 @@ let vibrateEnable = 1;
  *  @type {Boolean}
  *  @default
  *  @memberof Settings */
-let soundEnable = 1;
+export let soundEnable = 1;
 
 /** Volume scale to apply to all sound, music and speech
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let soundVolume = .5;
+export let soundVolume = .5;
 
 /** Default range where sound no longer plays
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let soundDefaultRange = 40;
+export let soundDefaultRange = 40;
 
 /** Default range percent to start tapering off sound (0-1)
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let soundDefaultTaper = .7;
+export let soundDefaultTaper = .7;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Medals settings
@@ -222,28 +227,28 @@ let soundDefaultTaper = .7;
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let medalDisplayTime = 5;
+export let medalDisplayTime = 5;
 
 /** How quickly to slide on/off medals in seconds
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let medalDisplaySlideTime = .5;
+export let medalDisplaySlideTime = .5;
 
 /** Size of medal display
  *  @type {Vector2}
  *  @default Vector2(640,80)
  *  @memberof Settings */
-let medalDisplaySize = vec2(640, 80);
+export let medalDisplaySize = vec2(640, 80);
 
 /** Size of icon in medal display
  *  @type {Number}
  *  @default
  *  @memberof Settings */
-let medalDisplayIconSize = 50;
+export let medalDisplayIconSize = 50;
 
 /** Set to stop medals from being unlockable (like if cheats are enabled)
  *  @type {Boolean}
  *  @default 0
  *  @memberof Settings */
-let medalsPreventUnlock;
+export let medalsPreventUnlock;

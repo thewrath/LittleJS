@@ -4,6 +4,39 @@
 
 'use strict';
 
+import {
+    tileSizeDefault, enablePhysicsSolver,
+    objectDefaultMass,
+    objectDefaultDamping,
+    objectDefaultAngleDamping,
+    objectDefaultElasticity,
+    objectDefaultFriction,
+    objectMaxSpeed,
+    gravity
+} from './engineSettings.js';
+
+import {
+    ASSERT, debugAABB
+} from './engineDebug.js';
+
+import {
+    abs, max,
+    sign, clamp, lerp, isOverlapping, Vector2,
+    vec2, randVector, Color
+} from './engineUtilities.js';
+
+import {
+    drawTile
+} from './engineDraw.js';
+
+import {
+    tileCollisionTest
+} from './engineTileLayer.js';
+
+import {
+    engineObjects, time
+} from './engine.js';
+
 /** 
  * LittleJS Object Base Object Class
  * <br> - Base object class used by the engine
@@ -29,7 +62,7 @@
  * const pos = vec2(2,3);
  * const object = new EngineObject(pos); 
  */
-class EngineObject
+export class EngineObject
 {
     /** Create an engine object and adds it to the list of objects
      *  @param {Vector2} [position=Vector2()]        - World space position of the object
